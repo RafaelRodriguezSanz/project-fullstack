@@ -1,0 +1,21 @@
+[submodule "backoffice"]
+	path = backoffice
+	url = https://github.com/RafaelRodriguezSanz/project-backoffice
+[submodule "backend"]
+	path = backend
+	url = https://github.com/RafaelRodriguezSanz/project-backend
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/RafaelRodriguezSanz/project-frontend
+[submodule "docs"]
+	path = docs
+	url = https://github.com/RafaelRodriguezSanz/project-docs
+[submodule "middleend"]
+	path = middleend
+	url = https://github.com/RafaelRodriguezSanz/project-middleend
+[submodule "persistency"]
+	path = persistency
+	url = https://github.com/RafaelRodriguezSanz/project-persistency
+[submodule "virtualization"]
+	path = virtualization
+	url = https://github.com/RafaelRodriguezSanz/project-virtualization
