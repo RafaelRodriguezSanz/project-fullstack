@@ -1,4 +1,5 @@
-.PHONY: update commit add push build run stop clean start
+.PHONY: start update commit add push pull checkout build run stop clean 
+.SILENT: start update commit add push pull checkout build run stop clean 
 
 start:
 	powershell -Command "Start-Process 'C:\Program Files\Docker\Docker\Docker Desktop.exe'"
@@ -47,7 +48,8 @@ ifeq ($(strip $(SUBMODULE)$(VERSION)),)
 	@echo "ERROR: Uso: make build SUBMODULE='nombre_del_submodulo' VERSION='tag_de_la_imagen'"
 	@exit 1
 endif
-	cd $(SUBMODULE) && make build VERSION=$(VERSION) && docker build -t $(SUBMODULE):$(VERSION) .
+	cd $(SUBMODULE) && if exist makefile (make build VERSION=$(VERSION))
+	cd $(SUBMODULE) && docker build -t $(SUBMODULE):$(VERSION) .
 
 run:
 ifeq ($(strip $(SUBMODULE)$(VERSION)$(PORT)),)
@@ -67,3 +69,14 @@ clean:
 	-@docker system prune -af
 	-@cd virtualization\docker\docker-compose && docker-compose down -v --remove-orphans
 	-@docker volume rm $(shell docker volume ls -q)
+
+compose:
+	cd virtualization/docker/docker-compose && docker compose build --progress plain --no-cache && docker-compose up
+
+
+
+#ifeq ($(OS),Windows_NT)
+#    Windows
+#else
+#    Mac
+#endif
