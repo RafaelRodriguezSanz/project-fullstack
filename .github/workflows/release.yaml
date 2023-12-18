@@ -23,9 +23,10 @@ jobs:
 
     - name: Release Version
       if: |
-        github.event_name == 'push' &&
-        github.event.ref == 'refs/heads/master' &&
-        startsWith(github.event.before, 'refs/heads/release/')
+        github.event_name == 'pull_request' &&
+        github.event.action == 'closed' &&
+        github.event.pull_request.base.ref == 'master' &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
 
       run: |
         # Obtener la versión de la rama de release
