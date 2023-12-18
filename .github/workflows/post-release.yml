@@ -11,8 +11,8 @@ jobs:
   release_workflow:
     runs-on: ubuntu-latest
     steps:
-      - name: gitflow-workflow-action release workflows
-        uses: hoangvvo/gitflow-workflow-action
+      - name: Gitflow Workflow Action release workflows
+        uses: hoangvvo/gitflow-workflow-action@0.2.4
         with:
           develop_branch: "develop"
           main_branch: "main"
