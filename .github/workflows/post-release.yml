@@ -17,4 +17,4 @@ jobs:
           develop_branch: "develop"
           main_branch: "main"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
