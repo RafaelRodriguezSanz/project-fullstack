@@ -25,18 +25,17 @@ jobs:
       run: npm install
 
     - name: Extract branch name
-      shell: bash
-      run: echo "BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
+      run: echo "BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
 
     - name: Release Version
       if: |
         github.event_name == 'push' &&
         github.event.ref == 'refs/heads/master' &&
-        startsWith(env.BRANCH_NAME, 'release/')
+        startsWith(env.BRANCH_NAME, 'refs/heads/release/')
 
       run: |
         # Obtener la versión de la rama de release
-        VERSION=$(echo $BRANCH_NAME | grep -oP 'release/\d+\.\d+\.\d+')
+        VERSION=$(echo $BRANCH_NAME | grep -oP 'refs/heads/release/\d+\.\d+\.\d+')
 
         # Crear un tag y generar una versión
         git tag $VERSION
