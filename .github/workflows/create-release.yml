@@ -1,0 +1,22 @@
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        required: true
+        description: "Version to release"
+
+name: Create release
+
+jobs:
+  pre_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: gitflow-workflow-action create release
+        uses: hoangvvo/gitflow-workflow-action
+        with:
+          develop_branch: "develop"
+          main_branch: "main"
+          version: ${{ inputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
