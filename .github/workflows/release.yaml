@@ -25,7 +25,7 @@ jobs:
       if: |
         github.event_name == 'push' &&
         github.event.ref == 'refs/heads/master' &&
-        startsWith(github.head_ref, 'refs/heads/release/')
+        startsWith(env.GITHUB_REF, 'refs/heads/release/')
 
       run: |
         # Obtener la versión de la rama de release
