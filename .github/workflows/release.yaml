@@ -25,10 +25,11 @@ jobs:
       run: npm install
 
     - name: Release Version
-      if: |
-        github.event_name == "pull_request" &&
-        github.event.pull_request.base.ref == "master" &&
+      if: >
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.base.ref == 'refs/heads/master' &&
         startsWith(github.event.pull_request.head.ref, 'refs/heads/release/')
+
       run: |
         # Obtener la versión de la rama de release
         VERSION=$(echo ${{ github.event.pull_request.head.ref }} | grep -oP 'refs/heads/release/\d+\.\d+\.\d+')
