@@ -25,13 +25,13 @@ jobs:
     - name: Release Version
       if: >
         github.event.pull_request.merged == true &&
-        github.event.pull_request.base.ref == 'refs/heads/master' &&
+        github.event.pull_request.base.ref == 'master' &&
+
         startsWith(github.event.pull_request.head.ref, 'release/')
 
       run: |
         # Obtener la versión de la rama de release
         VERSION=$(echo ${{ github.event.pull_request.head.ref }} | grep -oP 'release/\d+\.\d+\.\d+')
-
 
         # Crear un tag y generar una versión
         git tag $VERSION
