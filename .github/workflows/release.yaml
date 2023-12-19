@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    
+   
     runs-on: ubuntu-latest
 
     steps:
@@ -26,7 +26,6 @@ jobs:
       if: >
         github.event.pull_request.merged == true &&
         github.event.pull_request.base.ref == 'master' &&
-
         startsWith(github.event.pull_request.head.ref, 'release/')
 
       run: |
@@ -36,3 +35,6 @@ jobs:
         # Crear un tag y generar una versión
         git tag $VERSION
         git push origin $VERSION
+
+      env:
+        GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
