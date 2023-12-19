@@ -36,3 +36,6 @@ jobs:
         # Crear un tag y generar una versión
         git tag $VERSION
         git push origin $VERSION
+
+      env:
+        GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
