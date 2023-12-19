@@ -7,8 +7,7 @@ on:
 
 jobs:
   release:
-
-    if: github.event.pull_request.merged == true && github.event.pull_request.head == 'refs/heads/master' && startsWith(github.event.pull_request.base, 'refs/heads/release/')
+    
 
     runs-on: ubuntu-latest
 
@@ -25,9 +24,14 @@ jobs:
       run: npm install
 
     - name: Release Version
+      if: >
+        github.event.pull_request.merged == true &&
+        github.event.pull_request.head == 'refs/heads/master' &&
+        startsWith(github.event.pull_request.base, 'refs/heads/release/')
+
       run: |
         # Obtener la versión de la rama de release
-        VERSION=$(echo ${{ github.event.pull_request.base }} | grep -oP 'refs/heads/release/\d+\.\d+\.\d+')
+        VERSION=$(echo ${{ github.event.head_ref }} | grep -oP 'refs/heads/release/\d+\.\d+\.\d+')
 
         # Crear un tag y generar una versión
         git tag $VERSION
