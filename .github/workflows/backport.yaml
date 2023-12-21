@@ -8,7 +8,7 @@ on:
 jobs:
   backport:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -40,6 +40,11 @@ jobs:
 
       - name: Backport to Develop
         run: |
+
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git submodule foreach 'git config --local credential.helper store'
+
           echo "Starting backport"
           # Asegúrate de tener la rama 'develop' actualizada
           git checkout develop
@@ -62,6 +67,10 @@ jobs:
 
       - name: Create a Pull Request
         run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git submodule foreach 'git config --local credential.helper store'
+
           # Crear una nueva rama para el backport
           git checkout -b backport-${{ steps.version.outputs.version }}
 
