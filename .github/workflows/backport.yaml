@@ -16,7 +16,6 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           submodules: true
 
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -47,29 +46,25 @@ jobs:
           git config --global user.name "GitHub Actions"
           git submodule foreach 'git config --local credential.helper "store --file=.git/credentials"'
 
-
           echo "Starting backport"
           # Asegúrate de tener la rama 'develop' actualizada
           git checkout develop
           git pull origin develop
-          
+
           # Update references
           git pull --recurse-submodules
           git submodule update --remote --recursive
 
-
           # Realiza el backport desde 'master' a 'develop'
           git checkout master
           git pull origin master
-          
+
           git pull --recurse-submodules
           git submodule update --remote --recursive
 
           git checkout develop
-          git merge master --allow-unrelated-histories
+          git merge -X ours master --allow-unrelated-histories
 
-          # Resuelve conflictos si es necesario
-          # git mergetool, git add, git commit si hay conflictos
 
           # Empuja los cambios a la rama 'develop'
           git push origin develop
