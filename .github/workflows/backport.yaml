@@ -46,15 +46,8 @@ jobs:
           # Extra: Esperar a que GitHub termine de procesar el PR
           sleep 10
 
-          # Obtener el número del nuevo Pull Request
-          PR_NUMBER=$(curl -s -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls" | jq -r '.[0].number')
-
-          # Realizar el merge del PR aceptando siempre la versión de master
-          curl -X PUT \
-            -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}/merge" \
-            -d "{\"commit_title\":\"Merge pull request #${PR_NUMBER} from ${GITHUB_REPOSITORY}/master\",\"commit_message\":\"Automatically merged backport\",\"sha\":\"${DEVELOP_SHA}\",\"merge_method\":\"squash\",\"auto\":true}"
+          # Fusionar automáticamente el PR, resolviendo conflictos y aceptando cambios de master
+          gh pr merge --squash $DEVELOP_SHA --merge
           
         env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
