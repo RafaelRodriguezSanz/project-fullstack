@@ -36,6 +36,7 @@ jobs:
           # Obtén el SHA del último commit en la rama develop
           DEVELOP_SHA=$(git ls-remote origin develop | cut -f1)
 
+
           # Crea un Pull Request directamente desde master a develop
           curl -X POST \
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
