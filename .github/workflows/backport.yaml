@@ -50,6 +50,7 @@ jobs:
           # Asegúrate de tener la rama 'develop' actualizada
           git checkout develop
           git pull origin develop
+
           # Update references
           git pull --recurse-submodules
           git submodule update --remote --recursive
@@ -57,11 +58,13 @@ jobs:
           # Realiza el backport desde 'master' a 'develop'
           git checkout master
           git pull origin master
+
           git pull --recurse-submodules
           git submodule update --remote --recursive
 
           git checkout develop
           git merge -X ours master --allow-unrelated-histories
+
 
           # Empuja los cambios a la rama 'develop'
           git push origin develop
@@ -74,7 +77,7 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           git submodule foreach 'git config --local credential.helper "store --file=.git/credentials"'
-    
+
           # Crear una nueva rama para el backport
           git checkout -b backport-${{ steps.version.outputs.version }}
 
@@ -83,6 +86,7 @@ jobs:
 
           # Crear un Pull Request automáticamente para el backport
           git remote set-url origin https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/${{ github.repository }}
+
           curl -X POST \
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
@@ -91,4 +95,4 @@ jobs:
 
         env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-      
+
