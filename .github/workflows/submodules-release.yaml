@@ -1,14 +1,14 @@
-name: Release Workflow
+name: Submodule-Release Workflow
 
 on:
-  pull_request:
+  repository_dispatch:
     types:
-      - closed
+      - submodule-release
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -21,29 +21,39 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Update Submodules
+        run: |
+          git submodule update --init --recursive
+
       - name: Release Version
-        if: >
-          github.event.pull_request.merged == true &&
-          github.event.pull_request.base.ref == 'master' &&
-          startsWith(github.event.pull_request.head.ref, 'release/')
 
         run: |
           # Configurar el token de acceso personal directamente en los comandos de Git
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
 
+          # Extraer la ultima versión
+          LAST_VERSION=$(git tag -l 'release/*' --sort=-version:refname | head -n 1)
+          # Extraer los componentes de la versión
+          IFS='.' read -ra VERSION_PARTS <<< "$LAST_VERSION"
+          # Incrementar el tercer componente (parche)
+          PATCH_VERSION=$((VERSION_PARTS[2]+1))
+          # Formar la nueva versión
+          NEW_VERSION="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.$PATCH_VERSION"
+
+
           VERSION=$(echo ${{ github.event.pull_request.head.ref }} | grep -oP 'release/\d+\.\d+\.\d+')
 
           # Crear un tag y generar una versión
-          git tag $VERSION
-          git push origin $VERSION
+          git tag $NEW_VERSION
+          git push origin $NEW_VERSION
 
           # Crear una release utilizando la API de GitHub
           curl -X POST \
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/releases" \
-            -d "{\"tag_name\":\"$VERSION\",\"name\":\"Release $VERSION\",\"body\":\"Release $VERSION\"}"
-            
+            -d "{\"tag_name\":\"$NEW_VERSION\",\"name\":\"Release $NEW_VERSION\",\"body\":\"Release $NEW_VERSION\"}"
+
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
