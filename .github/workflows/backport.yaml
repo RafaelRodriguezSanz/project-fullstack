@@ -24,6 +24,10 @@ jobs:
       - name: Determine Release Version
         id: version
         run: |
+          # Configurar el token de acceso personal directamente en los comandos de Git
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+
           git checkout master && git fetch && git pull -f
           # Obtener el número de versión de la última release en master
           LAST_RELEASE=$(git describe --abbrev=0 --tags master)
@@ -38,10 +42,13 @@ jobs:
           # Asegúrate de tener la rama 'develop' actualizada
           git checkout develop
           git pull origin develop
+          git submodule update --init --recursive
 
           # Realiza el backport desde 'master' a 'develop'
           git checkout master
           git pull origin master
+          git submodule update --init --recursive
+          
           git checkout develop
           git merge master --allow-unrelated-histories
 
