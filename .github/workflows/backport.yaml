@@ -43,7 +43,7 @@ jobs:
           git checkout master
           git pull origin master
           git checkout develop
-          git merge master
+          git merge master --allow-unrelated-histories
 
           # Resuelve conflictos si es necesario
           # git mergetool, git add, git commit si hay conflictos
