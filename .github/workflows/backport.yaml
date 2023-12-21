@@ -24,6 +24,7 @@ jobs:
       - name: Determine Release Version
         id: version
         run: |
+          git checkout master && git fetch && git pull -f
           # Obtener el número de versión de la última release en master
           LAST_RELEASE=$(git describe --abbrev=0 --tags master)
           VERSION=$(echo $LAST_RELEASE | grep -oP 'release/\d+\.\d+\.\d+')
