@@ -33,6 +33,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git submodule foreach 'git config --local credential.helper store'
 
+
           # Extraer la ultima versión
           LAST_VERSION=$(git tag -l 'release/*' --sort=-version:refname | head -n 1)
           # Extraer los componentes de la versión
