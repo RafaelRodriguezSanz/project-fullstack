@@ -8,7 +8,6 @@ on:
 jobs:
   backport:
     runs-on: ubuntu-latest
- 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -43,6 +42,7 @@ jobs:
           git checkout develop
           git pull origin develop
           git submodule update --init --recursive
+
 
           # Realiza el backport desde 'master' a 'develop'
           git checkout master
