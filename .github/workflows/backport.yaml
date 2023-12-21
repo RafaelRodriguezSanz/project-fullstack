@@ -42,11 +42,8 @@ jobs:
           git checkout master
           git pull origin master
           git checkout develop
-          git merge master
-
-          # Resuelve conflictos si es necesario
-          # git mergetool, git add, git commit si hay conflictos
-
+          git merge master --allow-unrelated-histories
+          
           # Empuja los cambios a la rama 'develop'
           git push origin develop
 
