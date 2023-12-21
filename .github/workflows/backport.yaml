@@ -27,13 +27,17 @@ jobs:
       - name: Determine Release Version
         id: version
         run: |
+          # Configurar el token de acceso personal directamente en los comandos de Git
+
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           git submodule foreach 'git config --local credential.helper "store --file=.git/credentials"'
 
           git checkout master && git fetch && git pull -f
+
           LAST_RELEASE=$(git describe --abbrev=0 --tags master)
           VERSION=$(echo $LAST_RELEASE | grep -oP 'release/\d+\.\d+\.\d+')
+
           echo "::set-output name=version::$VERSION"
 
       - name: Backport to Develop
@@ -50,6 +54,7 @@ jobs:
 
           git checkout master
           git pull origin master
+
           git pull --recurse-submodules
           git submodule update --remote --recursive
 
@@ -67,6 +72,7 @@ jobs:
           DEVELOP_SHA=$(git rev-parse develop)
 
           # Crea un Pull Request directamente desde master a develop
+
           curl -X POST \
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
@@ -75,3 +81,4 @@ jobs:
 
         env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
