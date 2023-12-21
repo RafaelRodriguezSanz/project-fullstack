@@ -27,72 +27,21 @@ jobs:
       - name: Determine Release Version
         id: version
         run: |
-          # Configurar el token de acceso personal directamente en los comandos de Git
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           git submodule foreach 'git config --local credential.helper "store --file=.git/credentials"'
-
-          git checkout master && git fetch && git pull -f
-          # Obtener el número de versión de la última release en master
-          LAST_RELEASE=$(git describe --abbrev=0 --tags master)
-          VERSION=$(echo $LAST_RELEASE | grep -oP 'release/\d+\.\d+\.\d+')
-
-          # Salida del número de versión para que otros pasos lo usen
-          echo "::set-output name=version::$VERSION"
 
       - name: Backport to Develop
         run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git submodule foreach 'git config --local credential.helper "store --file=.git/credentials"'
+          # Obtén el SHA del último commit en la rama develop
+          DEVELOP_SHA=$(git rev-parse develop)
 
-          echo "Starting backport"
-          # Asegúrate de tener la rama 'develop' actualizada
-          git checkout develop
-          git pull origin develop
-
-          # Update references
-          git pull --recurse-submodules
-          git submodule update --remote --recursive
-
-          # Realiza el backport desde 'master' a 'develop'
-          git checkout master
-          git pull origin master
-
-          git pull --recurse-submodules
-          git submodule update --remote --recursive
-
-          git checkout develop
-          git merge -X ours master --allow-unrelated-histories
-
-
-          # Empuja los cambios a la rama 'develop'
-          git push origin develop
-        
-        env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
-      - name: Create a Pull Request
-        run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git submodule foreach 'git config --local credential.helper "store --file=.git/credentials"'
-
-          # Crear una nueva rama para el backport
-          git checkout -b backport-${{ steps.version.outputs.version }}
-
-          # Empujar la nueva rama a la rama 'develop'
-          git push origin backport-${{ steps.version.outputs.version }}
-
-          # Crear un Pull Request automáticamente para el backport
-          git remote set-url origin https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/${{ github.repository }}
-
+          # Crea un Pull Request directamente desde master a develop
           curl -X POST \
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/pulls" \
-            -d "{\"base\":\"develop\",\"head\":\"backport-${{ steps.version.outputs.version }}\",\"title\":\"Backport ${{ steps.version.outputs.version }}\",\"body\":\"Automated backport from master\"}"
+            -d "{\"base\":\"develop\",\"head\":\"master\",\"title\":\"Backport to Develop\",\"body\":\"Automated backport from master\"}"
 
         env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
