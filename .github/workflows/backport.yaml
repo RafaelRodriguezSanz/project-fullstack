@@ -8,7 +8,6 @@ on:
 jobs:
   backport:
     runs-on: ubuntu-latest
- 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -44,10 +43,7 @@ jobs:
           git pull origin master
           git checkout develop
           git merge master --allow-unrelated-histories
-
-          # Resuelve conflictos si es necesario
-          # git mergetool, git add, git commit si hay conflictos
-
+          
           # Empuja los cambios a la rama 'develop'
           git push origin develop
 
