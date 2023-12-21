@@ -43,7 +43,7 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/pulls" \
             -d "{\"base\":\"develop\",\"head\":\"master\",\"title\":\"Backport to Develop\",\"body\":\"Automated backport from master\"}"
 
-          # Extra: Esperar a que GitHub termine de procesar el PR
+          # Esperar a que GitHub termine de procesar el PR
           sleep 10
 
           # Fusionar automáticamente el PR, resolviendo conflictos y aceptando cambios de master
@@ -52,3 +52,4 @@ jobs:
         env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
             GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
