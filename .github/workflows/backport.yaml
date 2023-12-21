@@ -61,10 +61,7 @@ jobs:
           git submodule update --remote --recursive
 
           git checkout develop
-          git merge master --allow-unrelated-histories
-
-          # Resuelve conflictos si es necesario
-          # git mergetool, git add, git commit si hay conflictos
+          git merge -X ours master --allow-unrelated-histories
 
           # Empuja los cambios a la rama 'develop'
           git push origin develop
