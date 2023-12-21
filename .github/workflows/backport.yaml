@@ -44,7 +44,7 @@ jobs:
             -d "{\"base\":\"develop\",\"head\":\"master\",\"title\":\"Backport to Develop\",\"body\":\"Automated backport from master\"}"
 
           # Extra: Esperar a que GitHub termine de procesar el PR
-          sleep 10
+          sleep 15
 
           # Obtener el número del nuevo Pull Request
           PR_NUMBER=$(curl -s -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls" | jq -r '.[0].number')
@@ -55,6 +55,6 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}/merge" \
             -d "{\"commit_title\":\"Merge pull request #${PR_NUMBER} from ${GITHUB_REPOSITORY}/master\",\"commit_message\":\"Automatically merged backport\",\"sha\":\"${DEVELOP_SHA}\",\"merge_method\":\"squash\",\"auto\":true}"
-          
+    
         env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
