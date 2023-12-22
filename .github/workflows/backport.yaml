@@ -17,9 +17,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          submodules: true
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
