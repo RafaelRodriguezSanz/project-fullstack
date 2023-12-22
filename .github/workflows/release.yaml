@@ -46,11 +46,11 @@ jobs:
             -d "{\"tag_name\":\"$VERSION\",\"name\":\"Release $VERSION\",\"body\":\"Release $VERSION\"}"
             
       - name: Inicia servicio Docker
-        run: docker-compose up -d
+        run: docker-compose up -d --file virtualization\docker\docker-compose\docker-compose.yaml --project-name proyecto-final
       
       - name: Build docker image
         run: |
-          cd virtualization\docker\docker-compose && docker-compose build --build-arg APP_VERSION=$VERSION
+          docker-compose build --build-arg APP_VERSION=$VERSION --file virtualization\docker\docker-compose\docker-compose.yaml --project-name proyecto-final
   
       - name: Inicia sesión en Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
