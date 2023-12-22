@@ -44,8 +44,9 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/releases" \
             -d "{\"tag_name\":\"$VERSION\",\"name\":\"Release $VERSION\",\"body\":\"Release $VERSION\"}"
-            - name: Inicia servicio Docker
-            run: docker-compose up -d
+            
+      - name: Inicia servicio Docker
+        run: docker-compose up -d
       
       - name: Build docker image
         run: |
