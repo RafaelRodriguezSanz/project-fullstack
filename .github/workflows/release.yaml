@@ -47,14 +47,14 @@ jobs:
             - name: Inicia servicio Docker
             run: docker-compose up -d
       
-      - name: Construir imagen docker
+      - name: Build docker image
         run: |
           cd virtualization\docker\docker-compose && docker-compose build --build-arg APP_VERSION=$VERSION
   
       - name: Inicia sesión en Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
   
-      - name: Etiqueta y sube la imagen
+      - name: Uploading docker image registry
         run: |
           docker tag proyecto-final:${VERSION} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION}
           docker tag proyecto-final:${VERSION} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest
