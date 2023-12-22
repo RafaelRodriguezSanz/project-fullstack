@@ -47,12 +47,12 @@ jobs:
             
       - name: Inicia servicio Docker
         run: |
-          cd virtualization\docker\docker-compose
+          cd virtualization/docker/docker-compose
           docker-compose up -d
       
       - name: Build docker image
         run: |
-          cd virtualization\docker\docker-compose
+          cd virtualization/docker/docker-compose
           docker-compose build --build-arg APP_VERSION=$VERSION
   
       - name: Login Into dockerHub
