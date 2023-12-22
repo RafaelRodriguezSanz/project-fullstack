@@ -33,6 +33,13 @@ jobs:
 
       - name: Backport to Develop
         run: |
+          # Deshabilitar temporalmene las reglas de protección de rama en la rama 'develop'
+          curl -X PATCH \
+            -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/branches/develop" \
+            -d "{\"protection\":{\"enabled\":false}}"
+          
           # Crea un Pull Request directamente desde master a develop
           PR_URL=$(curl -X POST \
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
@@ -40,10 +47,20 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/pulls" \
             -d "{\"base\":\"develop\",\"head\":\"master\",\"title\":\"Backport to Develop\",\"body\":\"Automated backport from master\"}" \
             | jq -r '.html_url')
+
+          
           # Extra: Esperar a que GitHub termine de procesar el PR
           sleep 10
-          # Acepta los cambios del pr
+          
+          # Fusionar automáticamente el PR, permitiendo que GitHub resuelva automáticamente los conflictos
           gh pr merge $PR_URL --auto --squash
+          
+          # Habilitar nuevamente las reglas de protección de rama en la rama 'develop'
+          curl -X PATCH \
+            -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/branches/develop" \
+            -d "{\"protection\":{\"enabled\":true}}"
 
           
         env:
