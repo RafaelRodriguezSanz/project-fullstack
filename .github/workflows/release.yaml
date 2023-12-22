@@ -36,6 +36,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git fetch
           git submodule update --init --recursive --remote
+
           git submodule foreach 'git config --local credential.helper "store --file=.git/credentials"'
 
           VERSION=$(echo ${{ github.event.pull_request.head.ref }} | grep -oP 'release/\d+\.\d+\.\d+')
