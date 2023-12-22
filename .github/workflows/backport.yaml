@@ -48,7 +48,9 @@ jobs:
 
           # Fusionar automáticamente el PR, resolviendo conflictos y aceptando cambios de master
           gh pr merge --merge $DEVELOP_SHA
+
           
         env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
             GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
