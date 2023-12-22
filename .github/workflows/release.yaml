@@ -47,7 +47,7 @@ jobs:
             
       - name: Inicia servicio Docker
         run: docker-compose up -d --file virtualization\docker\docker-compose\docker-compose.yaml --project-name proyecto-final
-      
+
       - name: Build docker image
         run: |
           docker-compose build --build-arg APP_VERSION=$VERSION --file virtualization\docker\docker-compose\docker-compose.yaml --project-name proyecto-final
