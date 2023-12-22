@@ -52,7 +52,7 @@ jobs:
         run: |
           docker-compose build --build-arg APP_VERSION=$VERSION --file virtualization\docker\docker-compose\docker-compose.yaml --project-name proyecto-final
   
-      - name: Inicia sesión en Docker Hub
+      - name: Login Into dockerHub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
   
       - name: Uploading docker image registry
