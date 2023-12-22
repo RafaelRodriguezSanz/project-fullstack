@@ -43,11 +43,12 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/pulls" \
             -d "{\"base\":\"develop\",\"head\":\"master\",\"title\":\"Backport to Develop\",\"body\":\"Automated backport from master\"}"
 
-          # Esperar a que GitHub termine de procesar el PR
+          # Extra: Esperar a que GitHub termine de procesar el PR
           sleep 10
 
           # Fusionar automáticamente el PR, resolviendo conflictos y aceptando cambios de master
-          gh pr merge --squash $DEVELOP_SHA --merge
+          gh pr merge --merge $DEVELOP_SHA
+
           
         env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
