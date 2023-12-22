@@ -33,21 +33,17 @@ jobs:
 
       - name: Backport to Develop
         run: |
-          # Obtén el SHA del último commit en la rama develop
-          DEVELOP_SHA=$(git ls-remote origin develop | cut -f1)
-
           # Crea un Pull Request directamente desde master a develop
-          curl -X POST \
+          PR_URL=$(curl -X POST \
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/pulls" \
-            -d "{\"base\":\"develop\",\"head\":\"master\",\"title\":\"Backport to Develop\",\"body\":\"Automated backport from master\"}"
-
+            -d "{\"base\":\"develop\",\"head\":\"master\",\"title\":\"Backport to Develop\",\"body\":\"Automated backport from master\"}" \
+            | jq -r '.html_url')
           # Extra: Esperar a que GitHub termine de procesar el PR
           sleep 10
-
-          # Fusionar automáticamente el PR, resolviendo conflictos y aceptando cambios de master
-          gh pr merge --merge $DEVELOP_SHA
+          # Acepta los cambios del pr
+          gh pr merge $PR_URL --merge
           
         env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
