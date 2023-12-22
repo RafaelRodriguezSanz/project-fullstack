@@ -44,6 +44,7 @@ jobs:
           sleep 10
           # Acepta los cambios del pr
           gh pr merge $PR_URL --auto --squash
+
           
         env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
