@@ -45,14 +45,18 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/releases" \
             -d "{\"tag_name\":\"$VERSION\",\"name\":\"Release $VERSION\",\"body\":\"Release $VERSION\"}"
             
+      - name: Debug - Muestra el contenido del directorio actual
+        run: ls      
+        
       - name: Inicia servicio Docker
         run: |
-          cd virtualization\docker\docker-compose
+          cd virtualization/docker/docker-compose
+
           docker-compose up -d
       
       - name: Build docker image
         run: |
-          cd virtualization\docker\docker-compose
+          cd virtualization/docker/docker-compose
           docker-compose build --build-arg APP_VERSION=$VERSION
 
   
