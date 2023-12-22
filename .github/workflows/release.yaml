@@ -36,6 +36,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git fetch
           git submodule update --init --recursive --remote
+
           git submodule foreach 'git config --local credential.helper "store --file=.git/credentials"'
 
           VERSION=$(echo ${{ github.event.pull_request.head.ref }} | grep -oP 'release/\d+\.\d+\.\d+')
@@ -61,12 +62,13 @@ jobs:
   
       - name: Login Into dockerHub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
   
       - name: Uploading docker image registry
         run: |
-          docker tag proyecto-final:${VERSION} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION}
-          docker tag proyecto-final:${VERSION} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION}
-          docker push ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest      
+          cd virtualization/docker/docker-compose && ls && docker tag proyecto-final:${VERSION} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION}
+          cd virtualization/docker/docker-compose && ls && docker tag proyecto-final:${VERSION} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest
+          cd virtualization/docker/docker-compose && ls && docker push ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION}
+          cd virtualization/docker/docker-compose && ls && docker push ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest      
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
