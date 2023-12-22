@@ -9,6 +9,11 @@ jobs:
   backport:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+ 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -24,42 +29,24 @@ jobs:
       - name: Determine Release Version
         id: version
         run: |
-          # Obtener el número de versión de la última release en master
-          LAST_RELEASE=$(git describe --abbrev=0 --tags master)
-          VERSION=$(echo $LAST_RELEASE | grep -oP 'release/\d+\.\d+\.\d+')
-
-          # Salida del número de versión para que otros pasos lo usen
-          echo "::set-output name=version::$VERSION"
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git submodule foreach 'git config --local credential.helper "store --file=.git/credentials"'
 
       - name: Backport to Develop
         run: |
-          # Asegúrate de tener la rama 'develop' actualizada
-          git checkout develop
-          git pull origin develop
-
-          # Realiza el backport desde 'master' a 'develop'
-          git checkout master
-          git pull origin master
-          git checkout develop
-          git merge master
-
-          # Resuelve conflictos si es necesario
-          # git mergetool, git add, git commit si hay conflictos
-
-          # Empuja los cambios a la rama 'develop'
-          git push origin develop
-
-      - name: Create a Pull Request
-        run: |
-          # Crear una nueva rama para el backport
-          git checkout -b backport-${{ steps.version.outputs.version }}
-
-          # Empujar la nueva rama a la rama 'develop'
-          git push origin backport-${{ steps.version.outputs.version }}
-
-          # Crear un Pull Request automáticamente para el backport
-          curl -X POST \
+          # Crea un Pull Request directamente desde master a develop
+          PR_URL=$(curl -X POST \
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/pulls" \
-            -d "{\"base\":\"develop\",\"head\":\"backport-${{ steps.version.outputs.version }}\",\"title\":\"Backport ${{ steps.version.outputs.version }}\",\"body\":\"Automated backport from master\"}"
+            -d "{\"base\":\"develop\",\"head\":\"master\",\"title\":\"Backport to Develop\",\"body\":\"Automated backport from master\"}" \
+            | jq -r '.html_url')
+          # Extra: Esperar a que GitHub termine de procesar el PR
+          sleep 10
+          # Acepta los cambios del pr
+          gh pr merge $PR_URL --auto --squash
+          
+        env:
+            ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+            GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
