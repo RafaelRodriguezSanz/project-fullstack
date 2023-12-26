@@ -15,9 +15,6 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           submodules: true
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          submodules: true
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
