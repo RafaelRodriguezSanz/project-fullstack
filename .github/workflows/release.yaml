@@ -67,7 +67,7 @@ jobs:
       - name: Build docker image
         run: |
           VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }}  | grep -oP '/(\d+\.\d+\.\d+)')
-          docker build -f dockerfile -p "proyecto-final"  build --build-arg APP_VERSION=$VERSION_NUMBER
+          docker-compose -f virtualization/docker/docker-compose/docker-compose.yaml -p "proyecto-final"  build --build-arg APP_VERSION=$VERSION_NUMBER
 
       - name: Check docker images
         run: |
