@@ -15,12 +15,21 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           submodules: true
-          node-version: '14'
+
+      - name: Set up Maven
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '14'
+
+      - name: Maven clean compile
+        run: mvn clean compile
+        working-directory: ../backend
 
       - name: Release Version
         if: >
