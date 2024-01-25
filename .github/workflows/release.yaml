@@ -79,6 +79,6 @@ jobs:
       - name: Crea versiones de docker
         run: |
           VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }}  | grep -oP '(\d+\.\d+\.\d+)')
-          cd virtualization/docker/docker-compose && ls && docker-compose push --include-deps    
+          cd virtualization/docker/docker-compose && ls && docker-compose push   
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
