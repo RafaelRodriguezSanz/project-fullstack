@@ -62,7 +62,8 @@ jobs:
 
       - name: Inicia servicio Docker
         run: |
-          docker-compose -f virtualization/docker/docker-compose/docker-compose.yaml -p "proyecto-final" up -d
+          VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }}  | grep -oP '/(\d+\.\d+\.\d+)')
+          TAG=${VERSION_NUMBER}  docker-compose -f virtualization/docker/docker-compose/docker-compose.yaml -p "proyecto-final" up -d
       
       - name: Build docker image
         run: |
