@@ -35,7 +35,7 @@ jobs:
           git submodule foreach 'git config --local credential.helper "store --file=.git/credentials"'
           git fetch
           git submodule update --init --recursive --remote
-          
+
           VERSION=$(echo ${{ github.event.pull_request.head.ref }} | grep -oP 'release/\d+\.\d+\.\d+')
 
           # Crear un tag y generar una versión
