@@ -6,13 +6,12 @@ on:
       - 'release/*'
 
 jobs:
-  release-PR:
+  pr-checks:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
       repository-projects: write
-      
     steps:
       - name: Check if PRs exist
         run: |
@@ -21,7 +20,19 @@ jobs:
             exit 0
           else
             echo "No PRs found, continue with the workflow."
+            exit 1
           fi
+  
+  release-PR:
+    needs: pr-checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+      
+      
+    steps:
       - name: Checkout code
         uses: actions/checkout@v2
       
