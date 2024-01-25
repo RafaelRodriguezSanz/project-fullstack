@@ -58,7 +58,7 @@ jobs:
       - name: Create PR
         run: |
           # Crea un Pull Request directamente desde la release a master
-          VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }}  | grep -oP '(\d+\.\d+\.\d+)')
+          VERSION_NUMBER=$(echo ${{ github.event.pull_request.base.ref }}  | grep -oP '(\d+\.\d+\.\d+)')
           PR_URL=$(curl -X POST \
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
