@@ -5,6 +5,8 @@ on:
     workflows: ["Release Workflow"]
     types:
       - completed      
+    branches: 
+      - master
 
 jobs:
   backport:
