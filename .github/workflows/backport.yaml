@@ -45,8 +45,6 @@ jobs:
             | jq -r '.html_url')
           # Extra: Esperar a que GitHub termine de procesar el PR
           sleep 10
-          # Acepta los cambios del pr
-          gh pr merge $PR_URL --auto --squash
           
         env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
