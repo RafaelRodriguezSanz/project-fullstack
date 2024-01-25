@@ -8,6 +8,9 @@ on:
 jobs:
   pr-checks:
     runs-on: ubuntu-latest
+    continue-on-error: true
+    outputs:
+      status: ${{ join(steps.*.conclusion) }}
     permissions:
       contents: write
       pull-requests: write
