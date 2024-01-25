@@ -4,7 +4,7 @@ on:
   workflow_run:
     workflows: ["Release Workflow"]
     types:
-      - completed      
+      - completed
 
 jobs:
   backport:
