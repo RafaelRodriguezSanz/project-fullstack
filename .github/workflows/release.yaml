@@ -26,38 +26,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '14'
-          
-      - name: Maven clean install
-        run: mvn clean install
-        working-directory: backend
-
-      - name: Maven clean install
-        run: mvn clean install
-        working-directory: backend
-
-      - name: Maven clean install
-        run: mvn clean install
-        working-directory: backend
-
-      - name: Maven clean install
-        run: mvn clean install
-        working-directory: backend
-
-      - name: Maven clean install
-        run: mvn clean install
-        working-directory: backend
-
-      - name: Maven clean install
-        run: mvn clean install
-        working-directory: backend
-
-      - name: Maven clean install
-        run: mvn clean install
-        working-directory: backend
-
-      - name: Maven clean install
-        run: mvn clean install
-        working-directory: backend
 
       - name: Maven clean install
         run: mvn clean install
@@ -99,26 +67,20 @@ jobs:
       - name: Build docker image
         run: |
           VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }}  | grep -oP '/(\d+\.\d+\.\d+)')
-          docker build -t "proyecto-final" --build-arg APP_VERSION=$VERSION_NUMBER .
+          docker build -f dockerfile -p "proyecto-final"  build --build-arg APP_VERSION=$VERSION_NUMBER
 
       - name: Check docker images
         run: |
           docker images    
 
-      - name: Check docker images
-        run: |
-          docker images    
-          
       - name: Inicia sesión en Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Crea versiones de docker
         run: |
           VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }}  | grep -oP '(\d+\.\d+\.\d+)')
-          docker tag proyecto-final:${VERSION_NUMBER} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION_NUMBER}
-          docker tag proyecto-final:${VERSION_NUMBER} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION_NUMBER}
-          docker push ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest      
-          
+          cd virtualization/docker/docker-compose && ls && docker tag proyecto-final:${VERSION_NUMBER} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION_NUMBER}
+          cd virtualization/docker/docker-compose && ls && docker tag proyecto-final:${VERSION_NUMBER} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest
+          cd virtualization/docker/docker-compose && ls && docker-compose push    
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
