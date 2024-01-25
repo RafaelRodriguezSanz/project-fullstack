@@ -39,6 +39,10 @@ jobs:
         run: mvn clean install
         working-directory: backend
 
+      - name: Maven clean install
+        run: mvn clean install
+        working-directory: backend
+
       - name: Release Version
         if: >
           github.event.pull_request.merged == true &&
@@ -81,6 +85,8 @@ jobs:
 
       - name: Crea versiones de docker
         run: |
+          echo "VERSION: ${VERSION}"
+          echo "VERSION_NUMBER: ${VERSION_NUMBER}"
           cd virtualization/docker/docker-compose && ls && docker tag proyecto-final:${VERSION_NUMBER} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION_NUMBER}
           cd virtualization/docker/docker-compose && ls && docker tag proyecto-final:${VERSION_NUMBER} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest
           cd virtualization/docker/docker-compose && ls && docker push ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION_NUMBER}
