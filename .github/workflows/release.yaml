@@ -71,9 +71,9 @@ jobs:
 
       - name: Crea versiones de docker
         run: |
-          cd virtualization/docker/docker-compose && ls && docker tag proyecto-final:${VERSION} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION}
-          cd virtualization/docker/docker-compose && ls && docker tag proyecto-final:${VERSION} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest
-          cd virtualization/docker/docker-compose && ls && docker push ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION}
+          cd virtualization/docker/docker-compose && ls && docker tag proyecto-final:$VERSION ${{ secrets.DOCKER_USERNAME }}/proyecto-final:$VERSION
+          cd virtualization/docker/docker-compose && ls && docker tag proyecto-final:$VERSION ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest
+          cd virtualization/docker/docker-compose && ls && docker push ${{ secrets.DOCKER_USERNAME }}/proyecto-final:$VERSION
           cd virtualization/docker/docker-compose && ls && docker push ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest      
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
