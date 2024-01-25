@@ -28,6 +28,7 @@ jobs:
   
   release-PR:
     needs: pr-checks
+    if: contains(needs.*.result, 'failure') == false
     runs-on: ubuntu-latest
     permissions:
       contents: write
