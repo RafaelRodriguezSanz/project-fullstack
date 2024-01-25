@@ -29,7 +29,7 @@ jobs:
 
       - name: Maven clean compile
         run: mvn clean compile
-        working-directory: ../backend
+        working-directory: backend
 
       - name: Release Version
         if: >
