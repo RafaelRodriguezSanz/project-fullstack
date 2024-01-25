@@ -69,6 +69,17 @@ jobs:
             token: ${{ secrets.ACCESS_TOKEN }}
             submodules: true
 
+        - name: Set up Maven
+          uses: actions/setup-java@v2
+          with:
+            distribution: 'adopt'
+            java-version: '11'
+   
+        - name: Build JARs
+          run: mvn clean install
+          working-directory: backend
+        
+
         - name: Inicia servicio Docker
           run: |
             VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }}  | grep -oP '(\d+\.\d+\.\d+)')
