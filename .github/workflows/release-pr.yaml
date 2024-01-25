@@ -28,7 +28,7 @@ jobs:
   
   release-PR:
     needs: pr-checks
-    if: (needs.pr-checks.outputs.check == 'true')
+    if: (needs.pr-checks.outputs.should-run == 'true')
     runs-on: ubuntu-latest
     permissions:
       contents: write
