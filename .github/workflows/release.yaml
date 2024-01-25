@@ -104,6 +104,7 @@ jobs:
           run: |
             VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }}  | grep -oP '(\d+\.\d+\.\d+)')
             cd virtualization/docker/docker-compose && ls && TAG=${VERSION_NUMBER} docker-compose push && TAG=latest docker-compose push   
+
           env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
