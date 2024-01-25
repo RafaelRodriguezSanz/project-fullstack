@@ -8,37 +8,26 @@ on:
 jobs:
   pr-checks:
     runs-on: ubuntu-latest
-    continue-on-error: true
     outputs:
-      status: ${{ join(steps.*.conclusion) }}
+      foo: ${{ steps.pr-checks.release-PR.should-run }}
     permissions:
       contents: write
       pull-requests: write
       repository-projects: write
-      actions: 'write'
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      
-      - name: Configure gitCLI
-        id: version
-        run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git submodule foreach 'git config --local credential.helper "store --file=.git/credentials"' 
-
       - name: Check if PRs exist
         run: |
           if curl -s -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls?state=open&base=master&head=${{ github.event.ref }}" | jq -e '.[]' > /dev/null; then
-            gh run delete ${{ github.run_id }}
-            gh run watch ${{ github.run_id }}
+            run: echo "should-run=false" >> $GITHUB_OUTPUT
+            echo "PRs exist. Exiting workflow."
           else
+            run: echo "should-run=true" >> $GITHUB_OUTPUT
             echo "No PRs found, continue with the workflow."
-            exit 0
           fi
   
   release-PR:
     needs: pr-checks
+    if: (needs.pr-checks.outputs.foo == 'true')
     runs-on: ubuntu-latest
     permissions:
       contents: write
