@@ -43,11 +43,12 @@ jobs:
       - name: Create PR
         run: |
           # Crea un Pull Request directamente desde la release a master
+          VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }}  | grep -oP '(\d+\.\d+\.\d+)')
           PR_URL=$(curl -X POST \
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/pulls" \
-            -d "{\"base\":\"master\",\"head\":\"${{ github.event.ref }}\",\"title\":\"Release ${{ github.event.ref }}\",\"body\":\"Automated PR for release ${{ github.event.ref }}\"}" \
+            -d "{\"base\":\"master\",\"head\":\"${{ github.event.ref }}\",\"title\":\"Release ${VERSION_NUMBER}\",\"body\":\"Automated PR for release ${VERSION_NUMBER}\"}" \
             | jq -r '.html_url')
           # Extra: Esperar a que GitHub termine de procesar el PR
           sleep 10
