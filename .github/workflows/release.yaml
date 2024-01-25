@@ -26,6 +26,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '14'
+          
+      - name: Maven clean install
+        run: mvn clean install
+        working-directory: backend
+
+      - name: Maven clean install
+        run: mvn clean install
+        working-directory: backend
+
+      - name: Maven clean install
+        run: mvn clean install
+        working-directory: backend
 
       - name: Maven clean install
         run: mvn clean install
