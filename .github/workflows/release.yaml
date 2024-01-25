@@ -45,8 +45,6 @@ jobs:
           git submodule update --init --recursive --remote
 
           VERSION=$(echo ${{ github.event.pull_request.head.ref }} | grep -oP 'release/\d+\.\d+\.\d+')
-          VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }} | grep -oP 'release/(\d+\.\d+\.\d+)' | cut -d'/' -f 2)
-
 
           # Crear un tag y generar una versión
           git tag $VERSION
@@ -104,5 +102,9 @@ jobs:
           run: |
             VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }}  | grep -oP '(\d+\.\d+\.\d+)')
             cd virtualization/docker/docker-compose && ls && TAG=${VERSION_NUMBER} docker-compose push   
+            cd virtualization/docker/docker-compose && ls && TAG=latest docker-compose push   
           env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+
+        
