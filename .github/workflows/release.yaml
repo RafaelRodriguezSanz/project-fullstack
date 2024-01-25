@@ -65,7 +65,7 @@ jobs:
       - name: Inicia sesión en Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
   
-      - name: Etiqueta y sube la imagen
+      - name: Crea versiones de docker
         run: |
           cd virtualization/docker/docker-compose && ls && docker tag proyecto-final:${VERSION} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION}
           cd virtualization/docker/docker-compose && ls && docker tag proyecto-final:${VERSION} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest
