@@ -72,7 +72,7 @@ jobs:
 
       - name: Crea versiones de docker
         run: |
-          VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }}  | grep -oP '/(\d+\.\d+\.\d+)')
+          VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }}  | grep -oP '(\d+\.\d+\.\d+)')
           cd virtualization/docker/docker-compose && ls && docker tag proyecto-final:${VERSION_NUMBER} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION_NUMBER}
           cd virtualization/docker/docker-compose && ls && docker tag proyecto-final:${VERSION_NUMBER} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest
           cd virtualization/docker/docker-compose && ls && docker push ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION_NUMBER}
