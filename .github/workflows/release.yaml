@@ -26,6 +26,38 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '14'
+          
+      - name: Maven clean install
+        run: mvn clean install
+        working-directory: backend
+
+      - name: Maven clean install
+        run: mvn clean install
+        working-directory: backend
+
+      - name: Maven clean install
+        run: mvn clean install
+        working-directory: backend
+
+      - name: Maven clean install
+        run: mvn clean install
+        working-directory: backend
+
+      - name: Maven clean install
+        run: mvn clean install
+        working-directory: backend
+
+      - name: Maven clean install
+        run: mvn clean install
+        working-directory: backend
+
+      - name: Maven clean install
+        run: mvn clean install
+        working-directory: backend
+
+      - name: Maven clean install
+        run: mvn clean install
+        working-directory: backend
 
       - name: Maven clean install
         run: mvn clean install
@@ -46,6 +78,8 @@ jobs:
           git submodule update --init --recursive --remote
 
           VERSION=$(echo ${{ github.event.pull_request.head.ref }} | grep -oP 'release/\d+\.\d+\.\d+')
+          VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }} | grep -oP 'release/(\d+\.\d+\.\d+)' | cut -d'/' -f 2)
+
 
           # Crear un tag y generar una versión
           git tag $VERSION
@@ -71,6 +105,10 @@ jobs:
         run: |
           docker images    
 
+      - name: Check docker images
+        run: |
+          docker images    
+          
       - name: Inicia sesión en Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
@@ -81,5 +119,6 @@ jobs:
           docker tag proyecto-final:${VERSION_NUMBER} ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/proyecto-final:${VERSION_NUMBER}
           docker push ${{ secrets.DOCKER_USERNAME }}/proyecto-final:latest      
+          
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
