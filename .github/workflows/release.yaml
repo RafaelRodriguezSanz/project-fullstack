@@ -38,13 +38,20 @@ jobs:
       - name: Generate Release Notes
         run: |
           # Obtener la versión de la rama de la pull request
-          VERSION=$(echo ${{ github.event.pull_request.head.ref }} | grep -oP 'release/\d+\.\d+\.\d+')
+          VERSION=$(echo release/0.0.1 | grep -oP 'release/\d+\.\d+\.\d+')
       
-          # Obtener el último tag (si existe)
-          LAST_TAG=$(git describe --tags --abbrev=0)
+          # Obtener la lista de commits desde la última versión (o desde el commit inicial si es la primera versión)
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
       
-          # Obtener la lista de commits desde el último tag (o desde el inicio si no hay un tag anterior) hasta el nuevo tag
-          COMMIT_MESSAGES=$(git log --pretty=format:"%h %s" ${LAST_TAG:-HEAD}..$VERSION --grep='\:\s' --reverse)
+          if [ -z "$LAST_TAG" ]; then
+            # No hay etiquetas, asumir que es la primera versión
+            LAST_TAG="0.0.0"
+            # Obtener todos los commits si no hay etiquetas
+            COMMIT_MESSAGES=$(git log --pretty=format:"%h %s" --grep='\:\s' --reverse)
+          else
+            # Obtener los commits desde la última etiqueta
+            COMMIT_MESSAGES=$(git log --pretty=format:"%h %s" $LAST_TAG..HEAD --grep='\:\s' --reverse)
+          fi
       
           # Inicializar la variable del cuerpo del release
           RELEASE_BODY="## $VERSION\n"
@@ -75,7 +82,6 @@ jobs:
       
           # Imprimir las notas de la versión para el registro
           cat RELEASE_NOTES.md
-
 
       - name: Release Version
         run: |
