@@ -35,8 +35,49 @@ jobs:
         run: mvn clean install
         working-directory: backend
 
+      - name: Generate Release Notes
+        run: |
+          # Obtener la versión de la rama de la pull request
+          VERSION=$(echo ${{ github.event.pull_request.head.ref }} | grep -oP 'release/\d+\.\d+\.\d+')
+      
+          # Obtener la lista de commits desde la última versión (o desde el commit inicial si es la primera versión)
+          LAST_TAG=$(git describe --tags --abbrev=0)
+          COMMIT_MESSAGES=$(git log --pretty=format:"%h %s" $LAST_TAG..HEAD --grep='\:\s' --reverse)
+      
+          # Inicializar la variable del cuerpo del release
+          RELEASE_BODY="## $LAST_TAG...$VERSION\n"
+      
+          # Iterar sobre los mensajes de commit y agregar al cuerpo del release según la categoría
+          while read -r COMMIT; do
+            CATEGORY=$(echo "$COMMIT" | grep -oP "^\w+")
+            case $CATEGORY in
+              "feat") RELEASE_BODY+="\n### Features\n- $COMMIT";;
+              "fix") RELEASE_BODY+="\n### Bug Fixes\n- $COMMIT";;
+              "doc"|"docs") RELEASE_BODY+="\n### Documentation\n- $COMMIT";;
+              "chore") RELEASE_BODY+="\n### Chores\n- $COMMIT";;
+              "style") RELEASE_BODY+="\n### Styles\n- $COMMIT";;
+              "type") RELEASE_BODY+="\n### Type Fixes\n- $COMMIT";;
+              "test") RELEASE_BODY+="\n### Tests\n- $COMMIT";;
+              "refactor") RELEASE_BODY+="\n### Refactors\n- $COMMIT";;
+              "website") RELEASE_BODY+="\n### Website Changes\n- $COMMIT";;
+              "revert") RELEASE_BODY+="\n### Reverts\n- $COMMIT";;
+              "clean") RELEASE_BODY+="\n### Cleanups\n- $COMMIT";;
+              "perf") RELEASE_BODY+="\n### Performance Improvements\n- $COMMIT";;
+              "ci") RELEASE_BODY+="\n### CI/CD\n- $COMMIT";;
+              "build") RELEASE_BODY+="\n### Build System\n- $COMMIT";;
+            esac
+          done <<< "$COMMIT_MESSAGES"
+      
+          # Añadir el cuerpo del release al archivo de notas de versión
+          echo -e "$RELEASE_BODY" >> RELEASE_NOTES.md
+      
+          # Imprimir las notas de la versión para el registro
+          cat RELEASE_NOTES.md  
+
       - name: Release Version
         run: |
+          # Obtener el contenido de RELEASE_NOTES.md
+          RELEASE_BODY=$(cat RELEASE_NOTES.md)
           # Configurar el token de acceso personal directamente en los comandos de Git
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
@@ -55,7 +96,7 @@ jobs:
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/releases" \
-            -d "{\"tag_name\":\"$VERSION\",\"name\":\"Release $VERSION\",\"body\":\"Release $VERSION\"}"
+            -d "{\"tag_name\":\"$VERSION\",\"name\":\"Release $VERSION\",\"body\":\"Release $RELEASE_BODY\"}"
 
   deploy:
       runs-on: ubuntu-latest
