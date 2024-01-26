@@ -45,6 +45,7 @@ jobs:
           if [ -z "$LAST_TAG" ]; then
             LAST_TAG="0.0.0"
           fi
+
           COMMIT_MESSAGES=$(git log --pretty=format:"%h %s" $LAST_TAG..HEAD --grep='\:\s' --reverse)
       
           # Inicializar la variable del cuerpo del release
@@ -148,6 +149,7 @@ jobs:
           run: |
             VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }}  | grep -oP '(\d+\.\d+\.\d+)')
             cd virtualization/docker/docker-compose && ls && TAG=${VERSION_NUMBER} docker-compose push && TAG=latest docker-compose push   
+
           env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
