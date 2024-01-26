@@ -41,6 +41,8 @@ jobs:
 
       - name: Release Version
         run: |
+          # Obtener el contenido de RELEASE_NOTES.md
+          RELEASE_BODY=$(cat RELEASE_NOTES.md)
           # Configurar el token de acceso personal directamente en los comandos de Git
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
@@ -108,6 +110,7 @@ jobs:
           run: |
             VERSION_NUMBER=$(echo ${{ github.event.pull_request.head.ref }}  | grep -oP '(\d+\.\d+\.\d+)')
             cd virtualization/docker/docker-compose && ls && TAG=${VERSION_NUMBER} docker-compose push && TAG=latest docker-compose push   
+
           env:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
