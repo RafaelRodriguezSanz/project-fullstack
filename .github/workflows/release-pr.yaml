@@ -77,7 +77,8 @@ jobs:
           "title": "Release ${VERSION_NUMBER}",
           "body": "$(printf "$PR_BODY")"
           }
-          EOF | jq -r '.html_url')
+          EOF
+          | jq -r '.html_url')
 
           echo "Pull Request created at: $PR_URL"
           sleep 10
