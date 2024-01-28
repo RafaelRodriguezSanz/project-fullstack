@@ -20,6 +20,9 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-black?logo=mongodb)
 ![RabbitMQ](https://img.shields.io/badge/RabbitMQ-black?logo=rabbitmq)
 ![Redpanda](https://img.shields.io/badge/Redpanda-black?logo=redpanda)
+![Markdown](https://img.shields.io/badge/Markdown-black?logo=markdown)
+![Makefile](https://img.shields.io/badge/Makefile-black?logo=gnu-make)
+
 
 
 
