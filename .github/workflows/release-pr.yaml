@@ -59,7 +59,6 @@ jobs:
         run: |
           # Crea un Pull Request directamente desde la release a master
           VERSION_NUMBER=$(echo ${{ github.ref_name }}  | grep -oP '(\d+\.\d+\.\d+)')
-
           PR_BODY=$(curl -sL https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/.github/pull_request_template.md)
           PR_BODY=$(echo "$PR_BODY" | sed 's/"/\\"/g')
 
