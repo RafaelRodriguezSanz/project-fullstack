@@ -59,7 +59,7 @@ jobs:
         run: |
           # Crea un Pull Request directamente desde la release a master
           VERSION_NUMBER=$(echo ${{ github.ref_name }} | grep -oP '(\d+\.\d+\.\d+)')
-          BRANCH_NAME=$(echo ${{ github.ref_name }} | cut -d'/' -f3-)
+          BRANCH_NAME=$(echo ${{ github.ref_name }})
       
           # Leer el contenido del archivo de plantilla y escapar caracteres especiales usando Python
           PR_BODY=$(curl -sL https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/.github/pull_request_template.md | python -c "import json, sys; print(json.dumps(sys.stdin.read()))")
