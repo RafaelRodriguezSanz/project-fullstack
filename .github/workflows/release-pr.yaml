@@ -1,0 +1,74 @@
+name: Release PR
+ 
+on:
+  push:
+    branches:
+      - 'release/*'
+
+jobs:
+  pr-checks:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+    continue-on-error: true
+    outputs:
+      should-run: ${{ steps.check.outputs.should-run }}
+    steps:
+      - name: Check if PRs exist
+        id: check
+        run: |
+          if curl -s -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls?state=open&base=master&head=${{ github.event.ref }}" | jq -e '.[]' > /dev/null; then
+            echo "should-run=false" >> $GITHUB_OUTPUT
+            echo "PRs exist. Exiting workflow."
+          else
+            echo "should-run=true" >> $GITHUB_OUTPUT
+            echo "No PRs found, continue with the workflow."
+          fi
+        
+  
+  release-PR:
+    needs: pr-checks
+    if: needs.pr-checks.outputs.should-run == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Configure gitCLI
+        id: version
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git submodule foreach 'git config --local credential.helper "store --file=.git/credentials"'  
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create PR
+        run: |
+          # Crea un Pull Request directamente desde la release a master
+          VERSION_NUMBER=$(echo ${{ github.ref_name }} | grep -oP '(\d+\.\d+\.\d+)')
+          BRANCH_NAME=$(echo ${{ github.ref_name }})
+          PR_BODY=$(curl -sL https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/.github/pull_request_template.md | python -c "import json, sys; print(json.dumps(sys.stdin.read()))")
+                
+          PR_URL=$(curl -X POST \
+            -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/RafaelRodriguezSanz/project-fullstack/pulls" \
+            -d "{\"base\":\"master\",\"head\":\"${BRANCH_NAME}\",\"title\":\"Release ${VERSION_NUMBER}\",\"body\":${PR_BODY}" \
+            | jq -r '.html_url')
+
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
