@@ -60,11 +60,11 @@ jobs:
           # Crea un Pull Request directamente desde la release a master
           VERSION_NUMBER=$(echo ${{ github.ref_name }}  | grep -oP '(\d+\.\d+\.\d+)')
           BRANCH_NAME=$(echo ${{ github.ref_name }} | cut -d'/' -f3-)
-          PR_BODY=$(curl -sL https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/.github/pull_request_template.md)
-          echo $PR_BODY
-          PR_BODY=$(echo "$PR_BODY"| jq -sR '.' | sed 's/"/\\"/g')
-          echo $PR_BODY
           
+          # Leer el contenido del archivo de plantilla y escapar caracteres especiales
+          PR_BODY=$(curl -sL https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/.github/pull_request_template.md | jq -sR '.' | sed 's/"/\\"/g')
+          
+          # Crear el Pull Request utilizando el contenido escapado del cuerpo
           PR_URL=$(curl -X POST \
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
