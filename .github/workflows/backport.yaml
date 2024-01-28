@@ -37,7 +37,7 @@ jobs:
       - name: Backport to Develop
         run: |
           # Gets PR template
-          PR_BODY=$(curl -sL https://raw.githubusercontent.com/${{ github.repository_owner }}/${{ github.repository }}/${{ github.ref_name }}/.github/pull_request_template.md)
+          PR_BODY=$(curl -sL https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/.github/pull_request_template.md)
           PR_BODY=$(echo "$PR_BODY" | sed 's/"/\\"/g')
 
           # Crea un Pull Request directamente desde master a develop
