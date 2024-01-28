@@ -38,9 +38,7 @@ jobs:
         run: |
           # Gets PR template
           PR_BODY=$(curl -sL https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/.github/pull_request_template.md)
-          echo $PR_BODY
           PR_BODY=$(echo "$PR_BODY"| jq -sR '.' | sed 's/"/\\"/g')
-          echo $PR_BODY
 
           # Crea un Pull Request directamente desde master a develop
           PR_URL=$(curl -X POST \

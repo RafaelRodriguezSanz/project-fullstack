@@ -61,21 +61,15 @@ jobs:
           VERSION_NUMBER=$(echo ${{ github.ref_name }} | grep -oP '(\d+\.\d+\.\d+)')
           BRANCH_NAME=$(echo ${{ github.ref_name }})
       
-          # Leer el contenido del archivo de plantilla y escapar caracteres especiales usando Python
           PR_BODY=$(curl -sL https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/.github/pull_request_template.md | python -c "import json, sys; print(json.dumps(sys.stdin.read()))")
-      
-          echo "BRANCH_NAME: ${BRANCH_NAME}"
-          echo "PR_BODY: ${PR_BODY}"
-          
+
           PR_URL=$(curl -X POST \
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/RafaelRodriguezSanz/project-fullstack/pulls" \
             -d "{\"base\":\"master\",\"head\":\"${BRANCH_NAME}\",\"title\":\"Release ${VERSION_NUMBER}\",\"body\":${PR_BODY}" \
             | jq -r '.html_url')
-          
-          echo "PR_URL: ${PR_URL}"
-          
+                   
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
