@@ -63,10 +63,6 @@ jobs:
           github.event.pull_request.merged == true &&
           github.event.pull_request.base.ref == 'master' &&
           startsWith(github.event.pull_request.head.ref, 'release/')
-<<<<<<< HEAD
-=======
-
->>>>>>> f5b0c9a65e1986c92b7b39416f8a3d5f909a35bf
       steps:
         - name: Checkout code
           uses: actions/checkout@v2
