@@ -75,7 +75,7 @@ jobs:
           "base": "master",
           "head": "${BRANCH_NAME}",
           "title": "Release ${VERSION_NUMBER}",
-          "body": "${PR_BODY}"
+          "body": "$(printf "$PR_BODY")"
           }
           EOF | jq -r '.html_url')
 
