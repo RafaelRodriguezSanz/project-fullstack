@@ -36,6 +36,16 @@ ifeq ($(strip $(SUBMODULE)$(BRANCH)),)
 endif
 	cd $(SUBMODULE) && git checkout $(BRANCH)
 
+checkout-master:
+	cd backend && git checkout master && git fetch && git pull	
+	cd backoffice && git checkout master && git fetch && git pull
+	cd docs && git checkout master && git fetch && git pull
+	cd frontend && git checkout master && git fetch && git pull
+	cd middleend && git checkout master && git fetch && git pull
+	cd persistency && git checkout master && git fetch && git pull
+	cd virtualization && git checkout master && git fetch && git pull
+	git checkout master && git fetch && git pull
+
 pull:
 ifeq ($(strip $(SUBMODULE)),)
 	@echo "ERROR: Uso: make pull SUBMODULE='nombre_del_submodulo'"
