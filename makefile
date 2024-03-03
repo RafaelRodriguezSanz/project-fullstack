@@ -71,8 +71,11 @@ clean:
 	-@docker volume rm $(shell docker volume ls -q)
 
 compose:
-	cd virtualization/docker/docker-compose && docker compose build --progress plain --no-cache && docker-compose up
-
+ifeq ($(strip $(TAG)),)
+	@echo "ERROR: Uso: make compose TAG='tag'"
+	@exit 1
+endif
+	cd virtualization/docker/docker-compose && set TAG=$(TAG) && docker compose build --no-cache && docker-compose up
 
 
 #ifeq ($(OS),Windows_NT)
