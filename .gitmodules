@@ -16,6 +16,3 @@
 [submodule "persistency"]
 	path = persistency
 	url = https://github.com/RafaelRodriguezSanz/project-persistency
-[submodule "virtualization"]
-	path = virtualization
-	url = https://github.com/RafaelRodriguezSanz/project-virtualization
